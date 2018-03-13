@@ -198,3 +198,4 @@ to estimate energy/power usage for a single rank (a limitation of DRAMPower).
 - Saugata Ghose (Carnegie Mellon University)
 - Tianshi Li (Carnegie Mellon University)
 - @henryzh
+# ramulator_modify
