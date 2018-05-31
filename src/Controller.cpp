@@ -102,14 +102,17 @@ void Controller<TLDRAM>::tick(){
         }
         return;  // nothing more to be done this cycle
     }
-
     if (req->is_first_command) {
         int coreid = req->coreid;
         req->is_first_command = false;
         if (req->type == Request::Type::READ || req->type == Request::Type::WRITE) {
           channel->update_serving_requests(req->addr_vec.data(), 1, clk);
         }
-        int tx = (channel->spec->prefetch_size * channel->spec->channel_width / 8);
+        int tx = 0;
+	if (channel->spec->standard_name == "HBM2")
+            tx = (channel->spec->prefetch_size * channel->spec->channel_width / 16);
+	else
+	    tx = (channel->spec->prefetch_size * channel->spec->channel_width / 8);
         if (req->type == Request::Type::READ) {
             if (is_row_hit(req)) {
                 ++read_row_hits[coreid];

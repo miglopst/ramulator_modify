@@ -9,6 +9,8 @@
 #include "Statistics.h"
 #include "GDDR5.h"
 #include "HBM.h"
+#include "HBM2.h"
+#include "NVM.h"
 #include "LPDDR3.h"
 #include "LPDDR4.h"
 #include "WideIO2.h"
@@ -106,7 +108,13 @@ public:
         assert((sz[0] & (sz[0] - 1)) == 0);
         assert((sz[1] & (sz[1] - 1)) == 0);
         // validate size of one transaction
-        int tx = (spec->prefetch_size * spec->channel_width / 8);
+	int tx = 0;
+        if (spec->standard_name == "HBM2"){
+            tx = (spec->prefetch_size * spec->channel_width / 16);
+        }
+        else {
+            tx = (spec->prefetch_size * spec->channel_width / 8);
+        }
         tx_bits = calc_log2(tx);
         assert((1<<tx_bits) == tx);
         // If hi address bits will not be assigned to Rows
@@ -285,12 +293,15 @@ public:
 
     bool send(Request req)
     {
-        req.addr_vec.resize(addr_bits.size());
+        //cout<<"addr_bits size: "<<addr_bits.size()<<endl;
+        //should be 6, which means there are 6 levels in the memory hierarchy
+	req.addr_vec.resize(addr_bits.size());
         long addr = req.addr;
         int coreid = req.coreid;
-
         // Each transaction size is 2^tx_bits, so first clear the lowest tx_bits bits
-        clear_lower_bits(addr, tx_bits);
+        //cout<<"addr = "<<addr<<endl;
+	//cout<<"tx bits = "<<tx_bits<<endl;
+	clear_lower_bits(addr, tx_bits);
 
         switch(int(type)){
             case int(Type::ChRaBaRoCo):
@@ -307,6 +318,11 @@ public:
                 assert(false);
         }
 
+
+        //for (int i = 0; i <= int(T::Level::MAX)-1; i++){
+	//	cout<<"address bits "<<i<<" = "<<addr_bits[i]<<endl;
+	//	cout<<"level "<<i<<" = "<<req.addr_vec[i]<<endl;
+	//}
         if(ctrls[req.addr_vec[0]]->enqueue(req)) {
             // tally stats here to avoid double counting for requests that aren't enqueued
             ++num_incoming_requests;

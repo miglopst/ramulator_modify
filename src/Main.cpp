@@ -23,6 +23,8 @@
 #include "WideIO.h"
 #include "WideIO2.h"
 #include "HBM.h"
+#include "HBM2.h"
+#include "NVM.h"
 #include "SALP.h"
 #include "ALDRAM.h"
 #include "TLDRAM.h"
@@ -52,7 +54,6 @@ void run_dramtrace(const Config& configs, Memory<T, Controller>& memory, const c
         if (!end && !stall){
             end = !trace.get_dramtrace_request(addr, type);
         }
-
         if (!end){
             req.addr = addr;
             req.type = type;
@@ -232,6 +233,12 @@ int main(int argc, const char *argv[])
     } else if (standard == "HBM") {
       HBM* hbm = new HBM(configs["org"], configs["speed"]);
       start_run(configs, hbm, files);
+    } else if (standard == "HBM2") {
+      HBM2* hbm2 = new HBM2(configs["org"], configs["speed"]);
+      start_run(configs, hbm2, files);
+    } else if (standard == "NVM") {
+      NVM* nvm = new NVM(configs["org"], configs["speed"]);
+      start_run(configs, nvm, files);
     } else if (standard == "WideIO") {
       // total cap: 1GB, 1/4 of others
       WideIO* wio = new WideIO(configs["org"], configs["speed"]);

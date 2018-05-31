@@ -13,6 +13,8 @@
 #include "WideIO.h"
 #include "WideIO2.h"
 #include "HBM.h"
+#include "HBM2.h"
+#include "NVM.h"
 #include "SALP.h"
 
 using namespace ramulator;
@@ -23,6 +25,8 @@ static map<string, function<MemoryBase *(const Config&, int)> > name_to_func = {
     {"GDDR5", &MemoryFactory<GDDR5>::create}, 
     {"WideIO", &MemoryFactory<WideIO>::create}, {"WideIO2", &MemoryFactory<WideIO2>::create},
     {"HBM", &MemoryFactory<HBM>::create},
+    {"HBM2", &MemoryFactory<HBM2>::create},
+    {"NVM", &MemoryFactory<NVM>::create},
     {"SALP-1", &MemoryFactory<SALP>::create}, {"SALP-2", &MemoryFactory<SALP>::create}, {"SALP-MASA", &MemoryFactory<SALP>::create},
 };
 

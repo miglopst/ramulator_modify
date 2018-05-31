@@ -313,9 +313,9 @@ public:
     bool enqueue(Request& req)
     {
         Queue& queue = get_queue(req.type);
-        if (queue.max == queue.size())
+        if (queue.max == queue.size()){
             return false;
-
+		}
         req.arrive = clk;
         queue.q.push_back(req);
         // shortcut for read requests, if a write to same addr exists
@@ -400,7 +400,11 @@ public:
             if (req->type == Request::Type::READ || req->type == Request::Type::WRITE) {
               channel->update_serving_requests(req->addr_vec.data(), 1, clk);
             }
-            int tx = (channel->spec->prefetch_size * channel->spec->channel_width / 8);
+            int tx = 0;
+	    if (channel->spec->standard_name == "HBM2")
+              tx = (channel->spec->prefetch_size * channel->spec->channel_width / 16);
+	    else
+	      tx = (channel->spec->prefetch_size * channel->spec->channel_width / 8);
             if (req->type == Request::Type::READ) {
                 if (is_row_hit(req)) {
                     ++read_row_hits[coreid];

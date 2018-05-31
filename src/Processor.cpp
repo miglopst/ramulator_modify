@@ -454,7 +454,9 @@ bool Trace::get_dramtrace_request(long& req_addr, Request::Type& req_type)
         return false;
     }
     size_t pos;
+    //cout<<"address: "<<line<<endl;
     req_addr = std::stoul(line, &pos, 16);
+    //cout<<"req addr: "<<req_addr<<endl;
 
     pos = line.find_first_not_of(' ', pos+1);
 
