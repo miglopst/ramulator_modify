@@ -1,5 +1,5 @@
-#ifndef __HBM2_H
-#define __HBM2_H
+#ifndef __NVM_H
+#define __NVM_H
 
 #include "DRAM.h"
 #include "Request.h"
@@ -11,14 +11,14 @@ using namespace std;
 namespace ramulator
 {
 
-class HBM2
+class NVM
 {
 public:
     static string standard_name;
     enum class Org;
     enum class Speed;
-    HBM2(Org org, Speed speed);
-    HBM2(const string& org_str, const string& speed_str);
+    NVM(Org org, Speed speed);
+    NVM(const string& org_str, const string& speed_str);
 
     static map<string, enum Org> org_map;
     static map<string, enum Speed> speed_map;
@@ -117,12 +117,12 @@ public:
     };
 
     /* Prereq */
-    function<Command(DRAM<HBM2>*, Command cmd, int)> prereq[int(Level::MAX)][int(Command::MAX)];
+    function<Command(DRAM<NVM>*, Command cmd, int)> prereq[int(Level::MAX)][int(Command::MAX)];
 
     // SAUGATA: added function object container for row hit status
     /* Row hit */
-    function<bool(DRAM<HBM2>*, Command cmd, int)> rowhit[int(Level::MAX)][int(Command::MAX)];
-    function<bool(DRAM<HBM2>*, Command cmd, int)> rowopen[int(Level::MAX)][int(Command::MAX)];
+    function<bool(DRAM<NVM>*, Command cmd, int)> rowhit[int(Level::MAX)][int(Command::MAX)];
+    function<bool(DRAM<NVM>*, Command cmd, int)> rowopen[int(Level::MAX)][int(Command::MAX)];
 
     /* Timing */
     struct TimingEntry
@@ -135,14 +135,14 @@ public:
     vector<TimingEntry> timing[int(Level::MAX)][int(Command::MAX)];
 
     /* Lambda */
-    function<void(DRAM<HBM2>*, int)> lambda[int(Level::MAX)][int(Command::MAX)];
+    function<void(DRAM<NVM>*, int)> lambda[int(Level::MAX)][int(Command::MAX)];
 
     /* Organization */
     enum class Org : int
     { // per channel density here. Each stack comes with 8 channels
-        HBM2_2Gb,
-        HBM2_4Gb,
-        HBM2_8Gb,
+        NVM_2Gb,
+        NVM_4Gb,
+        NVM_8Gb,
         MAX
     };
 
@@ -162,7 +162,7 @@ public:
     /* Speed */
     enum class Speed : int
     {
-        HBM2_2Gbps,
+        NVM_2Gbps,
         MAX
     };
 
@@ -221,4 +221,4 @@ private:
 
 } /*namespace ramulator*/
 
-#endif /*__HBM2_H*/
+#endif /*__NVM_H*/
