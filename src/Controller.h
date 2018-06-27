@@ -335,7 +335,6 @@ public:
         req_queue_length_sum += readq.size() + writeq.size() + pending.size();
         read_req_queue_length_sum += readq.size() + pending.size();
         write_req_queue_length_sum += writeq.size();
-
         /*** 1. Serve completed reads ***/
         if (pending.size()) {
             Request& req = pending[0];
@@ -346,10 +345,9 @@ public:
                       req.addr_vec.data(), -1, clk);
                 }
                 req.callback(req);
-                pending.pop_front();
+		pending.pop_front();
             }
         }
-
         /*** 2. Refresh scheduler ***/
         refresh->tick_ref();
 
@@ -367,7 +365,6 @@ public:
             if (writeq.size() < int(wr_low_watermark * writeq.max) && readq.size() != 0)
                 write_mode = false;
         }
-
         /*** 4. Find the best command to schedule, if any ***/
 
         // First check the actq (which has higher priority) to see if there
@@ -431,7 +428,6 @@ public:
               write_transaction_bytes += tx;
             }
         }
-
         // issue command on behalf of request
         auto cmd = get_first_cmd(req);
         issue_cmd(cmd, get_addr_vec(cmd, req));
@@ -457,7 +453,6 @@ public:
         if (req->type == Request::Type::WRITE) {
             channel->update_serving_requests(req->addr_vec.data(), -1, clk);
         }
-
         // remove request from queue
         queue->q.erase(req);
     }

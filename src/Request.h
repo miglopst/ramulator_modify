@@ -18,7 +18,9 @@ public:
     vector<int> addr_vec;
     // specify which core this request sent from, for virtual address translation
     int coreid;
-
+    int req_id;
+    int tran_id;//a transaction contains multiple requests
+    int last_batch_tran_id;//the id of last transation in previous batch
     enum class Type
     {
         READ,

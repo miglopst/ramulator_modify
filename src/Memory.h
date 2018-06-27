@@ -280,7 +280,6 @@ public:
         in_queue_req_num_sum += cur_que_req_num;
         in_queue_read_req_num_sum += cur_que_readreq_num;
         in_queue_write_req_num_sum += cur_que_writereq_num;
-
         bool is_active = false;
         for (auto ctrl : ctrls) {
           is_active = is_active || ctrl->is_active();
